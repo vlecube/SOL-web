@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kontakt — Symfonický orchestr Liberec</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><img src="assets/sol-logo-white.png" alt="SOL — Symfonický orchestr Liberec" class="logo" style="height:100px;width:auto;"></a>
+    <nav class="primary">
+      <ul>
+        <li class="has-dropdown">
+          <a href="o-nas.html" class="nav-link">O orchestru</a>
+          <ul class="dropdown">
+            <li><a href="o-nas.html">O nás</a></li>
+            <li><a href="historie.html">Historie orchestru</a></li>
+            <li><a href="repertoar.html">Repertoár</a></li>
+            <li><a href="dirigent.html">Dirigent</a></li>
+            <li><a href="clenove.html">Členové</a></li>
+          </ul>
+        </li>
+        <li><a href="koncerty.html" class="nav-link">Koncerty</a></li>
+        <li><a href="galerie.html" class="nav-link">Galerie</a></li>
+        <li><a href="kontakt.html" class="nav-link current">Kontakt</a></li>
+      </ul>
+    </nav>
+    <button class="nav-toggle" aria-label="Otevřít menu" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<section class="tight">
+  <div class="wrap">
+    <h1 style="font-size: clamp(2.1rem, 4vw, 3rem); margin-top: 10px;">Kontakt</h1>
+    <p style="max-width: 60ch; margin-top: 16px;">Kontaktujte nás, pokud byste rádi, abychom Vám zahráli na Vaší akci. Napište nám, jestli se k nám chcete přidat.</p>
+  </div>
+</section>
+
+<div class="staff">
+      <span class="note tone-a" style="--intensity:0.63; left:23.3%; top:4px;" data-speed="0.75"></span>
+      <span class="note tone-c" style="--intensity:0.8; left:32.6%; top:17px;" data-speed="0.87"></span>
+      <span class="note tone-c" style="--intensity:0.7; left:92.9%; top:9px;" data-speed="0.81"></span>
+      <span class="note tone-b" style="--intensity:0.62; left:101.6%; top:17px;" data-speed="1.39"></span>
+    </div>
+
+<section>
+  <div class="wrap contact-grid">
+    <div>
+
+      <div class="info-row">
+        <span class="eyebrow">E-mail</span>
+        <p>e-mail</p>
+      </div>
+      <div class="info-row">
+        <span class="eyebrow">Telefon</span>
+        <p>+420 </p>
+      </div>
+      <div class="info-row">
+        <span class="eyebrow">Zkoušky</span>
+        <p>středa 18:30-21:00, Liberec</p>
+      </div>
+      <div class="info-row">
+        <span class="eyebrow">Sociální sítě</span>
+        <p><a href="#">Facebook</a> · <a href="#">Instagram</a></p>
+      </div>
+    </div>
+
+    <form class="contact">
+      <div class="field">
+        <label for="name">Jméno</label>
+        <input type="text" id="name" name="name" placeholder="Vaše jméno">
+      </div>
+      <div class="field">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" placeholder="vas@email.cz">
+      </div>
+      <div class="field">
+        <label for="message">Zpráva</label>
+        <textarea id="message" name="message" rows="6" placeholder="Napište nám..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" style="align-self: flex-start;">Odeslat zprávu</button>
+      <p style="font-size: 0.8rem; margin-top: -6px;">Formulář je zatím pouze vizuální — je potřeba jej propojit s e-mailem nebo formulářovou službou.</p>
+    </form>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap footer-inner">
+    <div style="display:flex; align-items:center; gap:16px;">
+      <img src="assets/sol-logo-white.png" alt="SOL logo" class="footer-logo" style="height:50px;width:auto;">
+      <p>© 2026 Symfonický orchestr Liberec</p>
+    </div>
+    <ul class="footer-links">
+      <li><a href="historie.html">O orchestru</a></li>
+      <li><a href="koncerty.html">Koncerty</a></li>
+      <li><a href="galerie.html">Galerie</a></li>
+      <li><a href="kontakt.html">Kontakt</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

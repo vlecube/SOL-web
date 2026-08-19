@@ -1,0 +1,186 @@
+document.addEventListener('DOMContentLoaded', function () {
+  var toggle = document.querySelector('.nav-toggle');
+  var nav = document.querySelector('nav.primary');
+  if (toggle && nav) {
+    toggle.addEventListener('click', function () {
+      var isOpen = nav.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  }
+  var dropdownParent = document.querySelector('.has-dropdown');
+  if (dropdownParent) {
+    var link = dropdownParent.querySelector('a.nav-link');
+    link.addEventListener('click', function (e) {
+      if (window.innerWidth <= 860) {
+        e.preventDefault();
+        dropdownParent.classList.toggle('open');
+      }
+    });
+  }
+
+  // Concert list: click a row to expand/collapse its detail paragraph.
+  document.querySelectorAll('.concert-toggle').forEach(function (btn) {
+    var detail = btn.parentElement.querySelector('.concert-detail');
+    if (!detail) return;
+    btn.addEventListener('click', function () {
+      var isOpen = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+      detail.style.maxHeight = isOpen ? '' : detail.scrollHeight + 'px';
+    });
+  });
+
+  // Gallery lightbox: click a photo to see it enlarged, centered on screen.
+  var lightbox = document.getElementById('lightbox');
+  if (lightbox) {
+    var lightboxImg = lightbox.querySelector('.lightbox-img');
+    var closeBtn = lightbox.querySelector('.lightbox-close');
+    var openLightbox = function (src, alt) {
+      lightboxImg.src = src;
+      lightboxImg.alt = alt || '';
+      lightbox.classList.add('open');
+      lightbox.setAttribute('aria-hidden', 'false');
+    };
+    var closeLightbox = function () {
+      lightbox.classList.remove('open');
+      lightbox.setAttribute('aria-hidden', 'true');
+      lightboxImg.src = '';
+    };
+    document.querySelectorAll('.gallery .frame[data-full]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var img = btn.querySelector('img');
+        openLightbox(btn.getAttribute('data-full'), img ? img.alt : btn.getAttribute('aria-label'));
+      });
+    });
+    closeBtn.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', function (e) {
+      if (e.target === lightbox) { closeLightbox(); }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && lightbox.classList.contains('open')) { closeLightbox(); }
+    });
+  }
+
+  // Re-roll each staff-line divider's notes on every load: a random count
+  // (3–10), scattered unevenly, with random tone and light intensity —
+  // replacing whatever static notes are in the HTML (used as a fallback
+  // if this script doesn't run at all).
+  var TONES = ['', 'tone-b', 'tone-c'];
+  document.querySelectorAll('.staff').forEach(function (staff) {
+    var count = 3 + Math.floor(Math.random() * 8); // 3..10
+    var lefts = [];
+    for (var i = 0; i < count; i++) { lefts.push(4 + Math.random() * 92); }
+    lefts.sort(function (a, b) { return a - b; });
+    for (var j = 1; j < lefts.length; j++) {
+      if (lefts[j] - lefts[j - 1] < 5) { lefts[j] = lefts[j - 1] + 5 + Math.random() * 6; }
+    }
+    var frag = document.createDocumentFragment();
+    lefts.forEach(function (left) {
+      var span = document.createElement('span');
+      var tone = TONES[Math.floor(Math.random() * TONES.length)];
+      span.className = ('note ' + tone).trim();
+      var top = Math.round(Math.random() * 24);
+      var intensity = (0.5 + Math.random() * 0.5).toFixed(2);
+      var speed = (0.4 + Math.random() * 1.1).toFixed(2);
+      var dur = (2.4 + Math.random() * 2.4).toFixed(2);
+      var delay = (Math.random() * 3).toFixed(2);
+      span.setAttribute('style', '--intensity:' + intensity + '; --dur:' + dur + 's; --delay:' + delay + 's; left:' + left.toFixed(1) + '%; top:' + top + 'px;');
+      span.setAttribute('data-speed', speed);
+      frag.appendChild(span);
+    });
+    staff.innerHTML = '';
+    staff.appendChild(frag);
+  });
+
+  // Gentle parallax drift for staff-line notes as they scroll through view,
+  // plus a pinned-scroll reveal for the hero photo and hero "stars": the hero
+  // stays put while the photo slides up and the lights switch on, then the
+  // page continues scrolling normally once the sequence has finished. The
+  // floating staff line itself stays put (styled in CSS) and is never moved.
+  var staffNotes = document.querySelectorAll('.staff .note');
+  var heroNotes = document.querySelectorAll('.hero-note');
+  var heroPhoto = document.querySelector('.hero-photo');
+  var heroPin = document.querySelector('.hero-pin');
+  var header = document.querySelector('header.site');
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var showHeroImmediately = function () {
+    if (heroPhoto) {
+      heroPhoto.style.opacity = '1';
+      heroPhoto.style.transform = 'none';
+    }
+    heroNotes.forEach(function (note) {
+      note.style.opacity = '';
+      note.classList.add('is-visible');
+    });
+  };
+
+  if (prefersReducedMotion) {
+    showHeroImmediately();
+  } else if (staffNotes.length || heroNotes.length || heroPhoto) {
+    var ticking = false;
+    var isPinnedLayout = function () {
+      return heroPin && window.innerWidth > 860;
+    };
+
+    var update = function () {
+      var vh = window.innerHeight;
+
+      // Parallax drift for the staff-line notes between sections.
+      staffNotes.forEach(function (note) {
+        var rect = note.parentElement.getBoundingClientRect();
+        var p = (vh - rect.top) / (vh + rect.height);
+        p = Math.max(0, Math.min(1, p));
+        var speed = parseFloat(note.getAttribute('data-speed')) || 0.8;
+        var drift = (p - 0.5) * 22 * speed;
+        note.style.transform = 'translate(-50%, ' + drift.toFixed(1) + 'px)';
+      });
+
+      if (!isPinnedLayout()) {
+        showHeroImmediately();
+        ticking = false;
+        return;
+      }
+
+      // Progress (0→1) through the pinned hero scroll range.
+      var headerH = header ? header.offsetHeight : 0;
+      var pinnedVisible = vh - headerH;
+      var scrollable = heroPin.offsetHeight - pinnedVisible;
+      var rect = heroPin.getBoundingClientRect();
+      var progress = scrollable > 0 ? (headerH - rect.top) / scrollable : 1;
+      progress = Math.max(0, Math.min(1, progress));
+
+      // Photo slides up into place over the first half of the sequence.
+      if (heroPhoto) {
+        var pp = Math.max(0, Math.min(1, progress / 0.5));
+        heroPhoto.style.opacity = pp.toFixed(2);
+        heroPhoto.style.transform = 'translateY(' + ((1 - pp) * 46).toFixed(1) + 'px)';
+      }
+
+      // Stars switch on one by one, staggered across the back half.
+      var n = heroNotes.length;
+      heroNotes.forEach(function (note, i) {
+        var start = 0.25 + (i / Math.max(n, 1)) * 0.6;
+        var np = Math.max(0, Math.min(1, (progress - start) / 0.12));
+        if (np >= 1) {
+          if (!note.classList.contains('is-visible')) {
+            note.style.opacity = '';
+            note.classList.add('is-visible');
+          }
+        } else {
+          note.classList.remove('is-visible');
+          note.style.opacity = np.toFixed(2);
+        }
+      });
+
+      ticking = false;
+    };
+    window.addEventListener('scroll', function () {
+      if (!ticking) {
+        window.requestAnimationFrame(update);
+        ticking = true;
+      }
+    }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
+});
