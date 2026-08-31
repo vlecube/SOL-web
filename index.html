@@ -59,8 +59,23 @@
         </div>
       </div>
       <div class="hero-photo">
-        <div class="frame-shape">
-          <img src="assets/hero-photo.jpg" alt="Symfonický orchestr Liberec">
+        <div class="frame-shape carousel" id="heroCarousel">
+          <div class="carousel-track">
+            <div class="carousel-slide">
+              <div class="slide-bg" style="background-image:url('assets/hero-photo.jpg');"></div>
+              <img src="assets/hero-photo.jpg" alt="Symfonický orchestr Liberec">
+            </div>
+            <div class="carousel-slide">
+              <div class="slide-bg" style="background-image:url('assets/hero-photo-2.jpg');"></div>
+              <img src="assets/hero-photo-2.jpg" alt="Hudba stříbrného plátna — letní koncerty 2026">
+            </div>
+          </div>
+          <button class="carousel-arrow prev" type="button" aria-label="Předchozí fotka">&#8249;</button>
+          <button class="carousel-arrow next" type="button" aria-label="Další fotka">&#8250;</button>
+          <div class="carousel-dots">
+            <button class="carousel-dot" type="button" aria-label="Fotka 1" data-index="0"></button>
+            <button class="carousel-dot" type="button" aria-label="Fotka 2" data-index="1"></button>
+          </div>
         </div>
       </div>
     </div>
