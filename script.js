@@ -81,9 +81,13 @@ document.addEventListener('DOMContentLoaded', function () {
       var top = Math.round(Math.random() * 24);
       var intensity = (0.5 + Math.random() * 0.5).toFixed(2);
       var speed = (0.4 + Math.random() * 1.1).toFixed(2);
-      var dur = (2.4 + Math.random() * 2.4).toFixed(2);
-      var delay = (Math.random() * 3).toFixed(2);
-      span.setAttribute('style', '--intensity:' + intensity + '; --dur:' + dur + 's; --delay:' + delay + 's; left:' + left.toFixed(1) + '%; top:' + top + 'px;');
+      // Každé světlo má trochu jiný rytmus a hloubku pohasnutí.
+      // Záporný delay znamená, že animace při načtení nezačne všem notám
+      // ve stejném bodě, ale každá už je v jiné fázi svého cyklu.
+      var dur = (3.2 + Math.random() * 3.8).toFixed(2);
+      var delay = (-(Math.random() * parseFloat(dur))).toFixed(2);
+      var dim = (0.42 + Math.random() * 0.30).toFixed(2);
+      span.setAttribute('style', '--intensity:' + intensity + '; --dim:' + dim + '; --dur:' + dur + 's; --delay:' + delay + 's; left:' + left.toFixed(1) + '%; top:' + top + 'px;');
       span.setAttribute('data-speed', speed);
       frag.appendChild(span);
     });
