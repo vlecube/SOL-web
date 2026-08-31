@@ -105,14 +105,17 @@ p { color: var(--parchment-dim); }
   border-radius: 50%;
   transform: translate(-50%, 0);
   will-change: transform, opacity;
-  opacity: var(--intensity, 1);
+  /* Stejná hodnota jako na začátku keyframes zabrání úvodnímu skoku. */
+  opacity: calc(var(--intensity, 1) * var(--dim, 0.58));
   box-shadow: 0 0 9px 3px rgba(201,161,90,0.7), 0 0 26px 9px rgba(201,161,90,0.32);
-  animation: note-flicker var(--dur, 3.4s) ease-in-out infinite;
+  animation: note-flicker var(--dur, 4.6s) ease-in-out infinite both;
   animation-delay: var(--delay, 0s);
 }
 @keyframes note-flicker {
-  0%, 100% { opacity: calc(var(--intensity, 1) * 0.62); }
-  50% { opacity: var(--intensity, 1); }
+  0%, 100% { opacity: calc(var(--intensity, 1) * var(--dim, 0.58)); }
+  22%      { opacity: calc(var(--intensity, 1) * 0.82); }
+  48%      { opacity: var(--intensity, 1); }
+  73%      { opacity: calc(var(--intensity, 1) * 0.70); }
 }
 .staff .note.tone-a { background: var(--brass); }
 .staff .note.tone-b { background: var(--brass-light); }
